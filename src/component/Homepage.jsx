@@ -1,6 +1,22 @@
 import { useEffect, useState } from "react";
 import AadharComponent from "./Aadharpage";
 
+const fetchTranslate = async (lang, text) => {
+    try {
+        const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=${lang}&dt=t&q=${encodeURIComponent(
+            text
+        )}`;
+
+        const response = await fetch(url);
+
+        const responseText = await response.json();
+
+        return responseText[0][0][0];
+    } catch (error) {
+        console.error(error);
+    }
+};
+
 export default function Homepage() {
     const [renderFormComponent, setRenderFormComponent] = useState(true);
     const [previewImage, setPreviewImage] = useState(null);
@@ -58,24 +74,23 @@ export default function Homepage() {
 
     useEffect(() => {
         const translateFn = async () => {
-            const translator = await window.Translator.create({
-                sourceLanguage: "en",
-                targetLanguage: "hi",
-            });
-
-            const translateName = await translator.translate(name);
-            const translateCompleteAddress = await translator.translate(
+            const translateAddress = await fetchTranslate(
+                localLanguage,
                 completeAddress
             );
-            const translateGender = await translator.translate(gender);
-            const translateDob = await translator.translate("Date of Birth");
-            const translateAddress = await translator.translate("address");
+            const translateName = await fetchTranslate(localLanguage, name);
+            const translateAdr = await fetchTranslate(localLanguage, "address");
+            const translateGender = await fetchTranslate(localLanguage, gender);
+            const translateDob = await fetchTranslate(
+                localLanguage,
+                "date of birth"
+            );
 
-            setLocalLanguageName(translateName);
-            setLocalLanguageAddress(translateCompleteAddress);
-            setLocalLanguageGender(translateGender);
-            setLocalLanguageAdr(translateAddress);
+            setLocalLanguageAddress(translateAddress);
+            setLocalLanguageName(translateName)
+            setLocalLanguageAdr(translateAdr);
             setLocalLanguageDob(translateDob);
+            setLocalLanguageGender(translateGender);
         };
 
         if (localLanguage !== "") {
@@ -527,6 +542,7 @@ export default function Homepage() {
                                     </label>
                                     <input
                                         value={localLanguageName}
+                                        onChange={(e) => setLocalLanguageName(e.target.value)}
                                         type="text"
                                         id="name_regional"
                                         name="namelocal"
@@ -545,6 +561,7 @@ export default function Homepage() {
                                 </label>
                                 <textarea
                                     value={localLanguageAddress}
+                                    onChange={(e) => setLocalLanguageAddress(e.target.value)}
                                     id="txtTarget"
                                     name="addresslocal"
                                     rows="3"
