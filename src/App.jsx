@@ -1,21 +1,16 @@
-import {
-    BrowserRouter as Router,
-    Routes,
-    Route,
-    Navigate,
-} from "react-router-dom";
-import Homepage from './component/Homepage';
-import Aadharpage from './component/Aadharpage';
+import { ErrorBoundary } from "react-error-boundary";
+import AppRoutes from "./routes/AppRoutes";
+import ErrorFallback from "./page-components/ErrorFallback";
 
 function App() {
+  const handleReset = () => {
+    window.location.reload();
+  };
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Homepage />} />
-        <Route path="/aadhar" element={<Aadharpage />} />
-      </Routes>
-    </Router>
-  )
+    <ErrorBoundary FallbackComponent={ErrorFallback} onReset={handleReset}>
+      <AppRoutes />
+    </ErrorBoundary>
+  );
 }
 
-export default App
+export default App;

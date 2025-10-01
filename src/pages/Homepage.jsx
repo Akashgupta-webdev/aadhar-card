@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import AadharComponent from "./Aadharpage";
+import AadharComponent from "../pages/Aadharpage";
 
 const fetchTranslate = async (lang, text) => {
     try {
