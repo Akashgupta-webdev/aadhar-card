@@ -1,4 +1,4 @@
-const AadharComponent = ({
+const AadharCardPage = ({
     previewImage,
     aadharNo,
     name,
@@ -260,4 +260,4 @@ const AadharComponent = ({
     );
 };
 
-export default AadharComponent;
+export default AadharCardPage;

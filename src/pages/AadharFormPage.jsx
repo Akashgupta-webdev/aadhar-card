@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import AadharComponent from "../pages/Aadharpage";
+import AadharCardPage from "./AadharCardPage";
 
 const fetchTranslate = async (lang, text) => {
     try {
@@ -596,7 +596,7 @@ export default function Homepage() {
     return renderFormComponent ? (
         FormComponent
     ) : (
-        <AadharComponent
+        <AadharCardPage
             previewImage={previewImage}
             aadharNo={aadharNo}
             name={name}

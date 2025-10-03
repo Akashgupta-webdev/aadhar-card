@@ -5,10 +5,12 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import Homepage from "../pages/Homepage";
-import Aadharpage from "../pages/Aadharpage";
+import AadharFormPage from "../pages/AadharFormPage";
 import Loginpage from "../pages/Loginpage";
 import ProtectedRoute from "./ProtectedRoute";
+import Layout from "../components/layout";
+import UserDashboard from "../pages/DashboardPage";
+import ExpenseTracker from "../pages/ExpenseTracker";
 
 export default function AppRoutes() {
   return (
@@ -16,8 +18,12 @@ export default function AppRoutes() {
       <Routes>
         <Route path="/login" element={<Loginpage />} />
         <Route element={<ProtectedRoute />}>
-          <Route path="/" element={<Homepage />} />
-          <Route path="/aadhar" element={<Aadharpage />} />
+          <Route element={<Layout />}>
+            <Route path="/" element={<Navigate to="/dashboard" />} />
+            <Route path="/dashboard" element={<UserDashboard />} />
+            <Route path="/aadhar-form" element={<AadharFormPage />} />
+            <Route path="/expense-tracker" element={<ExpenseTracker />} />
+          </Route>
         </Route>
       </Routes>
     </Router>
