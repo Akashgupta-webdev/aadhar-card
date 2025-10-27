@@ -6,6 +6,7 @@ function App() {
   const handleReset = () => {
     window.location.reload();
   };
+
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback} onReset={handleReset}>
       <AppRoutes />

@@ -12,40 +12,40 @@ import {
   TriangleAlert,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "../lib/supabaseClient";
 
-interface LoginFormProps extends React.ComponentProps<"div"> {
-  onLogin?: (credentials: { username: string; password: string }) => void;
-}
-
-export function LoginForm({ className, onLogin, ...props }: LoginFormProps) {
+export function LoginForm({ className, onLogin, ...props }) {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
-    username: "",
+    email: "",
     password: "",
   });
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(null)
+    setError(null);
     setIsLoading(true);
 
-    const { username, password } = formData;
-    if (username === "akashgupta" && password === "12345678") {
-      localStorage.setItem("isAuthenticated", "true");
-      setTimeout(() => {
-        setIsLoading(false);
-        navigate("/");
-      }, 2000);
+    const { email, password } = formData;
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      setError(error.message);
     } else {
-      setError("Invalid Credential");
-      setIsLoading(false);
+      console.log("Logged in:", data.user);
+      // redirect to dashboard
+      navigate("/dashboard");
     }
+    setIsLoading(false);
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e) => {
     const { id, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -88,21 +88,21 @@ export function LoginForm({ className, onLogin, ...props }: LoginFormProps) {
         <div className="space-y-5">
           <div className="space-y-3">
             <Label
-              htmlFor="username"
+              htmlFor="email"
               className="text-sm font-medium text-gray-700"
             >
-              Username
+              email
             </Label>
             <Input
-              id="username"
-              type="text"
-              placeholder="Enter your username"
-              value={formData.username}
+              id="email"
+              type="email"
+              placeholder="Enter your email"
+              value={formData.email}
               onChange={handleInputChange}
               required
               disabled={isLoading}
               className="h-12 transition-colors focus:border-primary border-gray-300"
-              autoComplete="username"
+              autoComplete="email"
             />
           </div>
 
@@ -148,7 +148,7 @@ export function LoginForm({ className, onLogin, ...props }: LoginFormProps) {
         <Button
           type="submit"
           className="w-full h-12 text-base font-semibold transition-all shadow-sm hover:shadow-md"
-          disabled={isLoading || !formData.username || !formData.password}
+          disabled={isLoading || !formData.email || !formData.password}
         >
           {isLoading ? (
             <>

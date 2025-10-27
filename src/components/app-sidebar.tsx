@@ -28,6 +28,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "@/lib/supabaseClient";
 
 // Menu items.
 const items = [
@@ -67,8 +68,8 @@ export function AppSidebar() {
   const navigate = useNavigate();
 
   // ---------------- Handler Functions ---------------------
-  const handleSignout = () => {
-    localStorage.removeItem("isAuthenticated");
+  const handleSignout = async () => {
+    await supabase.auth.signOut();
     navigate("/login");
   };
   

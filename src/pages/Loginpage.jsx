@@ -1,33 +1,41 @@
 import { Cpu, GalleryVerticalEnd } from "lucide-react";
 
 import { LoginForm } from "@/components/login-form";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Loader } from "../components/Loader";
+import { useAuth } from "../hooks/useAuth";
 
 export default function LoginPage() {
   const navigate = useNavigate();
-  const [pageLoading, setPageLoading] = useState(true);
-  const isAuthenticated = localStorage.getItem("isAuthenticated");
+  // const [pageLoading, setPageLoading] = useState(true);
+  // const isAuthenticated = localStorage.getItem("isAuthenticated");
 
-  useEffect(() => {
-    if (isAuthenticated === "true") {
-      navigate("/");
-    } else {
-      setPageLoading(false);
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (isAuthenticated === "true") {
+  //     navigate("/");
+  //   } else {
+  //     setPageLoading(false);
+  //   }
+  // }, []);
+  const { user, loading } = useAuth();
 
-  if (pageLoading) {
+  if (loading) {
     return (
       <div className="w-screen h-screen flex justify-center items-center gap-2.5">
         <Loader size="lg" />
         <div className="flex items-center">
-          <span className="text-xl font-semibold text-slate-800">Cyberworld</span>
-          <Cpu className="w-12 -translate-x-1 text-slate-800"/>
+          <span className="text-xl font-semibold text-slate-800">
+            Cyberworld
+          </span>
+          <Cpu className="w-12 -translate-x-1 text-slate-800" />
         </div>
       </div>
     );
+  }
+
+  if (user) {
+    return <Navigate to="/dashboard" />;
   }
 
   return (

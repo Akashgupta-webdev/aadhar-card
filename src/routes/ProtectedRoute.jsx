@@ -1,8 +1,9 @@
 import { Outlet, Navigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useAuth } from "../hooks/useAuth";
 
 export default function ProtectedRoute() {
-  const isAuthenticated = localStorage.getItem("isAuthenticated");
+  const { user, loading } = useAuth();
 
-  return isAuthenticated === "true" ? <Outlet /> : <Navigate to="/login" replace />;
+  if (loading) return <div>loading...</div>;
+  return user ? <Outlet /> : <Navigate to="/login" replace />;
 }
