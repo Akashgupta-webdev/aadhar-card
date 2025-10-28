@@ -1,3 +1,5 @@
+import { format } from "date-fns";
+
 const AadharCardPage = ({
     previewImage,
     aadharNo,
@@ -18,6 +20,8 @@ const AadharCardPage = ({
     localLanguageAdr,
     localLanguageDob
 }) => {
+    const formattedDOB = format(dob, "dd-MM-yyyy");
+
     return (
         <div className="font-['Arimo'] font-medium">
             {/* Main PDF Container */}
@@ -144,7 +148,7 @@ const AadharCardPage = ({
                                             </li>
                                             <li className="text-[10px] leading-[11px] mb-[3.5px] list-none">
                                                 {" "}
-                                                {localLanguageDob} / DOB : {dob}
+                                                {localLanguageDob} / DOB : {formattedDOB}
                                             </li>
                                             <li className="text-[10px] leading-[11px] mb-[3.5px] list-none">
                                                 {localLanguageGender}/{gender}
