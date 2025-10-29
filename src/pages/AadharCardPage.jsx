@@ -20,7 +20,7 @@ const AadharCardPage = ({
     localLanguageAdr,
     localLanguageDob
 }) => {
-    const formattedDOB = format(dob, "dd-MM-yyyy");
+    const formattedDOB = format(dob, "dd/MM/yyyy");
 
     return (
         <div className="font-['Arimo'] font-medium">
