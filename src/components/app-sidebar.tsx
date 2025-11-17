@@ -3,6 +3,7 @@ import {
   ChevronUp,
   Home,
   Inbox,
+  Link2,
   Search,
   Settings,
   User2,
@@ -39,7 +40,7 @@ const items = [
   },
   {
     title: "Aadhar",
-    url: "/aadhar-form",
+    url: "/aadhar",
     icon: Home,
   },
   {
@@ -58,10 +59,16 @@ const items = [
     icon: Search,
   },
   {
+    title: "Government Links",
+    url: "/government-links",
+    icon: Link2,
+  },
+  {
     title: "Settings",
     url: "#",
     icon: Settings,
   },
+
 ];
 
 export function AppSidebar() {
