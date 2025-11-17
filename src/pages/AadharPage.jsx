@@ -38,6 +38,7 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
+// Todo: add edit and delete option
 export default function AadharPage() {
   const { user } = useAuth();
   const [aadhaarData, setAadhaarData] = useState([]);
