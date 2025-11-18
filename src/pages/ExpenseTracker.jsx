@@ -17,6 +17,8 @@ import {
 } from "lucide-react";
 import { supabase } from "../lib/supabaseClient";
 import { useAuth } from "../hooks/useAuth";
+import { exportToExcel } from "../lib/exportToExcel";
+import { Button } from "@/components/ui/button";
 
 const ExpenseTracker = () => {
   const { user } = useAuth();
@@ -81,14 +83,17 @@ const ExpenseTracker = () => {
     let filtered = expenses;
 
     if (searchTerm) {
-      filtered = filtered.filter(expense =>
-        expense.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        expense.notes?.toLowerCase().includes(searchTerm.toLowerCase())
+      filtered = filtered.filter(
+        (expense) =>
+          expense.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          expense.notes?.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
     if (selectedCategory !== "all") {
-      filtered = filtered.filter(expense => expense.category === selectedCategory);
+      filtered = filtered.filter(
+        (expense) => expense.category === selectedCategory
+      );
     }
 
     setFilteredExpenses(filtered);
@@ -128,7 +133,9 @@ const ExpenseTracker = () => {
     };
 
     try {
-      const { data, error } = await supabase.from("expenses").insert([newExpense]);
+      const { data, error } = await supabase
+        .from("expenses")
+        .insert([newExpense]);
 
       if (error) {
         console.error("Error adding expense:", error);
@@ -153,7 +160,8 @@ const ExpenseTracker = () => {
   };
 
   const deleteExpense = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this expense?")) return;
+    if (!window.confirm("Are you sure you want to delete this expense?"))
+      return;
 
     try {
       const { error } = await supabase.from("expenses").delete().eq("id", id);
@@ -197,19 +205,25 @@ const ExpenseTracker = () => {
   const getCategoryColor = (category) => {
     const colors = {
       "Food & Dining": "bg-orange-100 text-orange-800",
-      "Transportation": "bg-blue-100 text-blue-800",
-      "Shopping": "bg-purple-100 text-purple-800",
-      "Entertainment": "bg-pink-100 text-pink-800",
+      Transportation: "bg-blue-100 text-blue-800",
+      Shopping: "bg-purple-100 text-purple-800",
+      Entertainment: "bg-pink-100 text-pink-800",
       "Bills & Utilities": "bg-gray-100 text-gray-800",
-      "Healthcare": "bg-red-100 text-red-800",
-      "Education": "bg-indigo-100 text-indigo-800",
-      "Travel": "bg-cyan-100 text-cyan-800",
-      "Salary": "bg-emerald-100 text-emerald-800",
-      "Freelance": "bg-lime-100 text-lime-800",
-      "Investment": "bg-amber-100 text-amber-800",
-      "Other": "bg-slate-100 text-slate-800",
+      Healthcare: "bg-red-100 text-red-800",
+      Education: "bg-indigo-100 text-indigo-800",
+      Travel: "bg-cyan-100 text-cyan-800",
+      Salary: "bg-emerald-100 text-emerald-800",
+      Freelance: "bg-lime-100 text-lime-800",
+      Investment: "bg-amber-100 text-amber-800",
+      Other: "bg-slate-100 text-slate-800",
     };
     return colors[category] || "bg-gray-100 text-gray-800";
+  };
+
+  const handleExport = () => {
+    if (expenses.length > 0) {
+      exportToExcel(expenses);
+    }
   };
 
   return (
@@ -230,10 +244,10 @@ const ExpenseTracker = () => {
               </p>
             </div>
             <div className="flex items-center gap-3">
-              <button className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+              <Button onClick={handleExport} className="cursor-pointer">
                 <Download size={18} />
                 <span className="hidden sm:inline">Export</span>
-              </button>
+              </Button>
             </div>
           </div>
         </div>
@@ -243,7 +257,9 @@ const ExpenseTracker = () => {
           <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Total Income</p>
+                <p className="text-sm font-medium text-gray-600">
+                  Total Income
+                </p>
                 <p className="text-2xl font-bold text-green-600 mt-2">
                   {formatCurrency(totals.totalProfit)}
                 </p>
@@ -258,7 +274,9 @@ const ExpenseTracker = () => {
           <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Total Expenses</p>
+                <p className="text-sm font-medium text-gray-600">
+                  Total Expenses
+                </p>
                 <p className="text-2xl font-bold text-red-600 mt-2">
                   {formatCurrency(totals.totalLoss)}
                 </p>
@@ -270,29 +288,39 @@ const ExpenseTracker = () => {
             </div>
           </div>
 
-          <div className={`bg-white rounded-2xl p-6 shadow-lg border hover:shadow-xl transition-shadow ${
-            totals.net >= 0 ? "border-green-200" : "border-red-200"
-          }`}>
+          <div
+            className={`bg-white rounded-2xl p-6 shadow-lg border hover:shadow-xl transition-shadow ${
+              totals.net >= 0 ? "border-green-200" : "border-red-200"
+            }`}
+          >
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Net Balance</p>
-                <p className={`text-2xl font-bold mt-2 ${
-                  totals.net >= 0 ? "text-green-600" : "text-red-600"
-                }`}>
+                <p
+                  className={`text-2xl font-bold mt-2 ${
+                    totals.net >= 0 ? "text-green-600" : "text-red-600"
+                  }`}
+                >
                   {formatCurrency(totals.net)}
                 </p>
-                <p className={`text-xs mt-1 ${
-                  totals.net >= 0 ? "text-green-600" : "text-red-600"
-                }`}>
+                <p
+                  className={`text-xs mt-1 ${
+                    totals.net >= 0 ? "text-green-600" : "text-red-600"
+                  }`}
+                >
                   {totals.net >= 0 ? "Positive" : "Negative"} balance
                 </p>
               </div>
-              <div className={`p-3 rounded-xl ${
-                totals.net >= 0 ? "bg-green-50" : "bg-red-50"
-              }`}>
+              <div
+                className={`p-3 rounded-xl ${
+                  totals.net >= 0 ? "bg-green-50" : "bg-red-50"
+                }`}
+              >
                 <DollarSign
                   size={24}
-                  className={totals.net >= 0 ? "text-green-600" : "text-red-600"}
+                  className={
+                    totals.net >= 0 ? "text-green-600" : "text-red-600"
+                  }
                 />
               </div>
             </div>
@@ -308,7 +336,10 @@ const ExpenseTracker = () => {
             Add New Transaction
           </h2>
 
-          <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <form
+            onSubmit={handleSubmit}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          >
             {/* Title */}
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700">
@@ -450,11 +481,14 @@ const ExpenseTracker = () => {
                   ({filteredExpenses.length} of {expenses.length} entries)
                 </span>
               </h2>
-              
+
               <div className="flex flex-col sm:flex-row gap-3">
                 {/* Search */}
                 <div className="relative">
-                  <Search size={18} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                  <Search
+                    size={18}
+                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                  />
                   <input
                     type="text"
                     placeholder="Search transactions..."
@@ -489,10 +523,14 @@ const ExpenseTracker = () => {
             <div className="text-center py-12">
               <Wallet size={64} className="mx-auto text-gray-300 mb-4" />
               <p className="text-gray-500 text-lg mb-2">
-                {expenses.length === 0 ? "No transactions recorded yet" : "No transactions found"}
+                {expenses.length === 0
+                  ? "No transactions recorded yet"
+                  : "No transactions found"}
               </p>
               <p className="text-gray-400 text-sm">
-                {expenses.length === 0 ? "Add your first transaction above" : "Try adjusting your search or filter"}
+                {expenses.length === 0
+                  ? "Add your first transaction above"
+                  : "Try adjusting your search or filter"}
               </p>
             </div>
           ) : (
@@ -540,7 +578,11 @@ const ExpenseTracker = () => {
                         </div>
                       </td>
                       <td className="py-4 px-6">
-                        <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${getCategoryColor(expense.category)}`}>
+                        <span
+                          className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${getCategoryColor(
+                            expense.category
+                          )}`}
+                        >
                           {expense.category}
                         </span>
                       </td>
