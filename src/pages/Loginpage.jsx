@@ -2,24 +2,13 @@ import { Cpu, GalleryVerticalEnd } from "lucide-react";
 
 import { LoginForm } from "@/components/login-form";
 import { Navigate, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
 import { Loader } from "../components/Loader";
 import { useAuth } from "../hooks/useAuth";
 
 export default function LoginPage() {
   const navigate = useNavigate();
-  // const [pageLoading, setPageLoading] = useState(true);
-  // const isAuthenticated = localStorage.getItem("isAuthenticated");
-
-  // useEffect(() => {
-  //   if (isAuthenticated === "true") {
-  //     navigate("/");
-  //   } else {
-  //     setPageLoading(false);
-  //   }
-  // }, []);
   const { user, loading } = useAuth();
-
+  
   if (loading) {
     return (
       <div className="w-screen h-screen flex justify-center items-center gap-2.5">

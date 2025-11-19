@@ -29,7 +29,7 @@ export default function AppRoutes() {
             <Route path="/aadhar-form" element={<AadharFormPage />} />
             <Route path="/aadhar-detail/:id" element={<AadharCardPage />} />
             <Route path="/expense-tracker" element={<ExpenseTracker />} />
-            <Route path="/government-link" element={<GovernmentLinkPage />} />
+            <Route path="/government-links" element={<GovernmentLinkPage />} />
             <Route path="/tools" element={<ToolsLinkPage />} />
           </Route>
         </Route>
