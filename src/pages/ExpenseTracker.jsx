@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   Plus,
   Trash2,
@@ -19,9 +19,12 @@ import { supabase } from "../lib/supabaseClient";
 import { useAuth } from "../hooks/useAuth";
 import { exportToExcel } from "../lib/exportToExcel";
 import { Button } from "@/components/ui/button";
+import { UserContext } from "../contexts/UserProvider";
 
 const ExpenseTracker = () => {
   const { user } = useAuth();
+  const { userData } = useContext(UserContext)
+  console.log("userData:", userData);
   const [expenses, setExpenses] = useState([]);
   const [filteredExpenses, setFilteredExpenses] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");

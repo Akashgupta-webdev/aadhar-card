@@ -232,7 +232,7 @@ const AadharCardPage = () => {
                       <li className="text-[10px] leading-[11px] mb-[3.5px] list-none">
                         {" "}
                         {adhaarData.localLanguageDob} / DOB :{" "}
-                        {adhaarData.formattedDOB}
+                        {adhaarData.dob}
                       </li>
                       <li className="text-[10px] leading-[11px] mb-[3.5px] list-none">
                         {adhaarData.localLanguageGender}/{adhaarData.gender}
