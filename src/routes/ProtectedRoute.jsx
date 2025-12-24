@@ -2,9 +2,11 @@ import { Outlet, Navigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { Loader } from "../components/Loader";
 import { Cpu } from "lucide-react";
+import { useContext } from "react";
+import { UserContext } from "../contexts/UserProvider";
 
 export default function ProtectedRoute() {
-  const { user, loading } = useAuth();
+  const { user, loading } = useContext(UserContext);
 
   if (loading) {
     return (

@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { supabase } from "../lib/supabaseClient";
-import { useAuth } from "../hooks/useAuth";
+import React, { useState, useEffect, useContext } from "react";
+import { supabase } from "../../lib/supabaseClient";
+import { useAuth } from "../../hooks/useAuth";
 import {
   Table,
   TableBody,
@@ -37,10 +37,11 @@ import {
   CreditCard,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "../../contexts/UserProvider";
 
 // Todo: add edit and delete option
 export default function AadharPage() {
-  const { user } = useAuth();
+  const { user } = useContext(UserContext);
   const [aadhaarData, setAadhaarData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -84,9 +85,8 @@ export default function AadharPage() {
     navigate(`/aadhar-detail/${id}`);
   };
 
-  const handleEdit = (aadhaar) => {
-    console.log("Editing Aadhaar:", aadhaar);
-    // Implement edit functionality
+  const handleEdit = (id) => {
+    navigate(`/aadhar-edit/${id}`);
   };
 
   const handleDelete = (aadhaar) => {
@@ -290,7 +290,7 @@ export default function AadharPage() {
                               View Details
                             </DropdownMenuItem>
                             <DropdownMenuItem
-                              onClick={() => handleEdit(aadhaar)}
+                              onClick={() => handleEdit(aadhaar.id)}
                               className="flex items-center gap-2"
                             >
                               <Edit className="h-4 w-4" />

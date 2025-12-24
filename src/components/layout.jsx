@@ -3,7 +3,7 @@ import { AppSidebar } from "./app-sidebar";
 import { Outlet } from "react-router-dom";
 import { IndianRupee } from "lucide-react";
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default function Layout({ children }) {
   return (
     <SidebarProvider>
       <AppSidebar />

@@ -1,42 +1,47 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { useAuth } from "../hooks/useAuth";
 import { supabase } from "../lib/supabaseClient";
-import { data } from "react-router-dom";
 import { AuthContext } from "./AuthContext";
 
 export const UserContext = createContext();
 
 export default function UserProvider({ children }) {
-  const { auth } = useContext(AuthContext);
-  console.log("auth:", auth);
-  const [userData, setUserData] = useState({
-    id: null,
-    name: "",
-    email: "",
-    balance: 0,
-    contact: null,
+  const { authUser, loading } = useContext(AuthContext);
+  const [user, setUser] = useState({
+    id: undefined,
+    name: undefined,
+    email: undefined,
+    balance: undefined,
+    contact: undefined,
+    admin: false
   });
 
   useEffect(() => {
-    if (auth) {
-      const { data, error } = supabase
+    const getUserData = async () => {
+      if (!authUser?.id) return;
+
+      const { data, error } = await supabase
         .from("user")
-        .select("name email contact balance")
-        .eq("user_id", auth.id);
+        .select("*")
+        .eq("user_id", authUser.id)
+        .single();
 
-      console.log("data:", data);
-
-      setUserData({
-        id: auth.id,
+      setUser({
+        ...user,
+        id: authUser.id,
         name: data?.name,
-        emaill: data?.emaill,
+        email: data?.email,
         balance: data?.balance,
         contact: data?.contact,
+        admin: data?.admin,
       });
-    }
-  }, [auth]);
+    };
+
+    getUserData();
+  }, [authUser]);
 
   return (
-    <UserContext.Provider value={{ userData }}>{children}</UserContext.Provider>
+    <UserContext.Provider value={{ user, loading }}>
+      {children}
+    </UserContext.Provider>
   );
 }

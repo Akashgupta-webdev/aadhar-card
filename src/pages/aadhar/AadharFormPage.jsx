@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import AadharCardPage from "./AadharCardPage";
-import { supabase } from "../lib/supabaseClient";
-import { useAuth } from "../hooks/useAuth";
-import { uploadAadhaarImage } from "../lib/uploadAadharImage";
+import { supabase } from "../../lib/supabaseClient";
+import { useAuth } from "../../hooks/useAuth";
+import { uploadAadhaarImage } from "../../lib/uploadAadharImage";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "../../contexts/UserProvider";
 
 const fetchTranslate = async (lang, text) => {
   try {
@@ -22,7 +23,7 @@ const fetchTranslate = async (lang, text) => {
 };
 
 export default function Homepage() {
-  const { user } = useAuth();
+  const { user } = useContext(UserContext);
   const [renderFormComponent, setRenderFormComponent] = useState(true);
   const [imageFile, setImageFile] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);

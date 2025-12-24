@@ -5,16 +5,19 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import AadharFormPage from "../pages/AadharFormPage";
-import Loginpage from "../pages/Loginpage";
-import ProtectedRoute from "./ProtectedRoute";
 import Layout from "../components/layout";
-import UserDashboard from "../pages/DashboardPage";
-import ExpenseTracker from "../pages/ExpenseTracker";
-import ToolsLinkPage from "../pages/ToolsLinkPage";
-import GovernmentLinkPage from "../pages/GovernmentLinkPage";
-import AadharCardPage from "../pages/AadharCardPage";
-import AadharPage from "../pages/AadharPage";
+import ProtectedRoute from "./ProtectedRoute";
+import AadharPage from "../pages/aadhar/AadharPage";
+import AadharFormPage from "../pages/aadhar/AadharFormPage";
+import AadharCardPage from "../pages/aadhar/AadharCardPage";
+import AadharCardEditPage from "../pages/aadhar/AadharCardEditPage";
+import Loginpage from "../pages/auth/Loginpage";
+import UserDashboard from "../pages/dashboard/DashboardPage";
+import ExpenseTracker from "../pages/tools-page/ExpenseTracker";
+import ToolsLinkPage from "../pages/tools-page/ToolsLinkPage";
+import GovernmentLinkPage from "../pages/government/GovernmentLinkPage";
+import WalletPage from "../pages/admin/WalletPage";
+import AdminPage from "../pages/admin/AdminPage";
 
 export default function AppRoutes() {
   return (
@@ -28,9 +31,12 @@ export default function AppRoutes() {
             <Route path="/aadhar" element={<AadharPage />} />
             <Route path="/aadhar-form" element={<AadharFormPage />} />
             <Route path="/aadhar-detail/:id" element={<AadharCardPage />} />
+            <Route path="/aadhar-edit/:id" element={<AadharCardEditPage />} />
             <Route path="/expense-tracker" element={<ExpenseTracker />} />
             <Route path="/government-links" element={<GovernmentLinkPage />} />
-            <Route path="/tools" element={<ToolsLinkPage />} />
+            <Route path="/tools" element={<ToolsLinkPage />} />            
+            <Route path="/admin" element={<AdminPage />} />
+            <Route path="/wallet" element={<WalletPage />} />
           </Route>
         </Route>
       </Routes>

@@ -15,16 +15,15 @@ import {
   MoreVertical,
   Edit,
 } from "lucide-react";
-import { supabase } from "../lib/supabaseClient";
-import { useAuth } from "../hooks/useAuth";
-import { exportToExcel } from "../lib/exportToExcel";
+import { supabase } from "../../lib/supabaseClient";
+import { useAuth } from "../../hooks/useAuth";
+import { exportToExcel } from "../../lib/exportToExcel";
 import { Button } from "@/components/ui/button";
-import { UserContext } from "../contexts/UserProvider";
+import { UserContext } from "../../contexts/UserProvider";
 
 const ExpenseTracker = () => {
-  const { user } = useAuth();
-  const { userData } = useContext(UserContext)
-  console.log("userData:", userData);
+  // const { user } = useAuth();
+  const { user } = useContext(UserContext)
   const [expenses, setExpenses] = useState([]);
   const [filteredExpenses, setFilteredExpenses] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -57,7 +56,8 @@ const ExpenseTracker = () => {
   // Fetch user-specific expenses
   useEffect(() => {
     const fetchExpenses = async () => {
-      if (!user) return;
+      if (!user.id) return;
+
       setIsLoading(true);
       try {
         const { data, error } = await supabase

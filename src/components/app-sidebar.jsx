@@ -30,6 +30,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/lib/supabaseClient";
+import { useContext, useEffect, useState } from "react";
+import { UserContext } from "../contexts/UserProvider";
 
 // Menu items.
 const items = [
@@ -68,18 +70,32 @@ const items = [
     url: "#",
     icon: Settings,
   },
-
 ];
 
 export function AppSidebar() {
   const navigate = useNavigate();
+  const [sidebarMenu, setSidebarMenu] = useState(items);
+  const { user } = useContext(UserContext);
+
+  useEffect(() => {
+    if (user?.admin) {
+      setSidebarMenu([
+        ...sidebarMenu,
+        {
+          title: "Admin",
+          url: "/admin",
+          icon: Link2,
+        },
+      ]);
+    }
+  }, [user]);
 
   // ---------------- Handler Functions ---------------------
   const handleSignout = async () => {
     await supabase.auth.signOut();
     navigate("/login");
   };
-  
+
   return (
     <Sidebar variant="floating" collapsible="icon">
       <SidebarContent>
@@ -87,16 +103,34 @@ export function AppSidebar() {
           <SidebarGroupLabel>Application</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <Link to={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+              {sidebarMenu.map((item) => {
+                // if (item.title === "Admin") {
+                //   console.log("itemTIl:", item.title);
+                //   if (user.admin) {
+                //   console.log("useradmin:", user.admin);
+
+                //     <SidebarMenuItem key={item.title}>
+                //       <SidebarMenuButton asChild>
+                //         <Link to={item.url}>
+                //           <item.icon />
+                //           <span>{item.title}</span>
+                //         </Link>
+                //       </SidebarMenuButton>
+                //     </SidebarMenuItem>;
+                //   }
+                //   return;
+                // }
+                return (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton asChild>
+                      <Link to={item.url}>
+                        <item.icon />
+                        <span>{item.title}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
@@ -132,14 +166,3 @@ export function AppSidebar() {
     </Sidebar>
   );
 }
-
-// export function AppSidebar() {
-//   return (
-//     <SidebarProvider>
-//       <Sidebar>
-//         <SidebarHeader />
-//         <SidebarContent />
-//       </Sidebar>
-//     </SidebarProvider>
-//   );
-// }

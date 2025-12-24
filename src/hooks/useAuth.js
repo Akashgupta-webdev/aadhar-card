@@ -2,18 +2,18 @@ import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabaseClient";
 
 export function useAuth() {
-  const [user, setUser] = useState(null);
+  const [authUser, setAuthUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
-      setUser(data?.session?.user ?? null);
+      setAuthUser(data?.session?.user ?? null);
       setLoading(false);
     });
 
     const { data: listener } = supabase.auth.onAuthStateChange(
       (_event, session) => {
-        setUser(session?.user ?? null);
+        setAuthUser(session?.user ?? null);
       }
     );
 
@@ -22,5 +22,5 @@ export function useAuth() {
     };
   }, []);
 
-  return { user, loading };
+  return { authUser, loading };
 }

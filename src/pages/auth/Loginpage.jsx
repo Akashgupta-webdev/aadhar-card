@@ -1,14 +1,14 @@
 import { Cpu, GalleryVerticalEnd } from "lucide-react";
 
 import { LoginForm } from "@/components/login-form";
-import { Navigate, useNavigate } from "react-router-dom";
-import { Loader } from "../components/Loader";
-import { useAuth } from "../hooks/useAuth";
+import { Navigate } from "react-router-dom";
+import { Loader } from "../../components/Loader";
+import { useContext } from "react";
+import { UserContext } from "../../contexts/UserProvider";
 
 export default function LoginPage() {
-  const navigate = useNavigate();
-  const { user, loading } = useAuth();
-  
+  const { user, loading } = useContext(UserContext);
+
   if (loading) {
     return (
       <div className="w-screen h-screen flex justify-center items-center gap-2.5">
