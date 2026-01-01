@@ -16,7 +16,6 @@ import UserDashboard from "../pages/dashboard/DashboardPage";
 import ExpenseTracker from "../pages/tools-page/ExpenseTracker";
 import ToolsLinkPage from "../pages/tools-page/ToolsLinkPage";
 import GovernmentLinkPage from "../pages/government/GovernmentLinkPage";
-import WalletPage from "../pages/admin/WalletPage";
 import AdminPage from "../pages/admin/AdminPage";
 
 export default function AppRoutes() {
@@ -36,7 +35,6 @@ export default function AppRoutes() {
             <Route path="/government-links" element={<GovernmentLinkPage />} />
             <Route path="/tools" element={<ToolsLinkPage />} />            
             <Route path="/admin" element={<AdminPage />} />
-            <Route path="/wallet" element={<WalletPage />} />
           </Route>
         </Route>
       </Routes>

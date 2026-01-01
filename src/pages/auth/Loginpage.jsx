@@ -8,7 +8,7 @@ import { UserContext } from "../../contexts/UserProvider";
 
 export default function LoginPage() {
   const { user, loading } = useContext(UserContext);
-
+  
   if (loading) {
     return (
       <div className="w-screen h-screen flex justify-center items-center gap-2.5">
@@ -23,7 +23,7 @@ export default function LoginPage() {
     );
   }
 
-  if (user) {
+  if (user.id) {
     return <Navigate to="/dashboard" />;
   }
 

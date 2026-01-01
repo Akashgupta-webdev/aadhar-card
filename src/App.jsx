@@ -3,6 +3,7 @@ import AppRoutes from "./routes/AppRoutes";
 import ErrorFallback from "./page-components/ErrorFallback";
 import AuthProvider from "./contexts/AuthContext";
 import UserProvider from "./contexts/UserProvider";
+import { Toaster } from 'sonner'
 
 function App() {
   const handleReset = () => {
@@ -13,6 +14,7 @@ function App() {
     <ErrorBoundary FallbackComponent={ErrorFallback} onReset={handleReset}>
       <AuthProvider>
         <UserProvider>
+          <Toaster />
           <AppRoutes />
         </UserProvider>
       </AuthProvider>

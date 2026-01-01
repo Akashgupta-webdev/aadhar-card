@@ -38,8 +38,6 @@ export function LoginForm({ className, onLogin, ...props }) {
     if (error) {
       setError(error.message);
     } else {
-      console.log("Logged in:", data.user);
-      // redirect to dashboard
       navigate("/dashboard");
     }
     setIsLoading(false);

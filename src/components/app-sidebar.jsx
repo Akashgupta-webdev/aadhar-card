@@ -75,24 +75,27 @@ const items = [
 export function AppSidebar() {
   const navigate = useNavigate();
   const [sidebarMenu, setSidebarMenu] = useState(items);
-  const { user } = useContext(UserContext);
+  const { user, logout } = useContext(UserContext);
 
   useEffect(() => {
     if (user?.admin) {
-      setSidebarMenu([
-        ...sidebarMenu,
-        {
-          title: "Admin",
-          url: "/admin",
-          icon: Link2,
-        },
-      ]);
+      if (!sidebarMenu.find(menu => menu.title === "Admin")) {
+        setSidebarMenu([
+          ...sidebarMenu,
+          {
+            title: "Admin",
+            url: "/admin",
+            icon: Link2,
+          },
+        ]);
+      }
     }
   }, [user]);
 
   // ---------------- Handler Functions ---------------------
   const handleSignout = async () => {
-    await supabase.auth.signOut();
+    await logout();
+
     navigate("/login");
   };
 
@@ -141,7 +144,7 @@ export function AppSidebar() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton>
-                  <User2 /> akashgupta
+                  <User2 /> {user.name || user.email}
                   <ChevronUp className="ml-auto" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
