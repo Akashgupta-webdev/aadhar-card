@@ -5,7 +5,7 @@ import { AuthContext } from "./AuthContext";
 export const UserContext = createContext();
 
 export default function UserProvider({ children }) {
-  const { authUser, loading } = useContext(AuthContext);
+  const { authUser, loading, setLoading } = useContext(AuthContext);
   const [user, setUser] = useState({
     id: authUser?.id,
     name: undefined,
@@ -17,32 +17,36 @@ export default function UserProvider({ children }) {
 
 
   useEffect(() => {
-    const getUserData = async () => {
-      if (!authUser?.id) return;
-
-      const { data, error } = await supabase
-        .from("user")
-        .select("*")
-        .eq("user_id", authUser.id)
-        .single();
-
-      if (error) console.error("error in loading user data:", error.message);
-
-      if (data) {
-        setUser({
-          ...user,
-          id: authUser.id,
-          name: data?.name,
-          email: authUser?.email,
-          balance: data?.balance,
-          contact: data?.contact,
-          admin: data?.admin,
-        });
-      }
-    };
-
-    getUserData();
+    try {
+      getUserData();
+    } catch (error) {
+      console.error(error);
+    } 
   }, [authUser]);
+
+  const getUserData = async () => {
+    if (!authUser?.id) return;
+
+    const { data, error } = await supabase
+      .from("user")
+      .select("*")
+      .eq("user_id", authUser.id)
+      .single();
+
+    if (error) console.error("error in loading user data:", error.message);
+
+    if (data) {
+      setUser({
+        ...user,
+        id: authUser.id,
+        name: data?.name,
+        email: authUser?.email,
+        balance: data?.balance,
+        contact: data?.contact,
+        admin: data?.admin,
+      });
+    }
+  };
 
   const logout = async () => {
     try {

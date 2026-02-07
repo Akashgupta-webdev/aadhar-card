@@ -22,7 +22,6 @@ import { Button } from "@/components/ui/button";
 import { UserContext } from "../../contexts/UserProvider";
 
 const ExpenseTracker = () => {
-  // const { user } = useAuth();
   const { user } = useContext(UserContext)
   const [expenses, setExpenses] = useState([]);
   const [filteredExpenses, setFilteredExpenses] = useState([]);

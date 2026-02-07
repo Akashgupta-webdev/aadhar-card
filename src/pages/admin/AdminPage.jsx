@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useMemo } from 'react'
 import { supabase } from '../../lib/supabaseClient';
-import { 
-  Search, 
-  Users, 
-  AlertCircle, 
-  Edit, 
-  Mail, 
-  Phone, 
-  User, 
+import {
+  Search,
+  Users,
+  AlertCircle,
+  Edit,
+  Mail,
+  Phone,
+  User,
   Wallet,
   Download,
   Filter,
@@ -43,6 +43,7 @@ import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
+import { useNavigate } from 'react-router-dom';
 
 export default function AdminPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -51,15 +52,17 @@ export default function AdminPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
+  const navigate = useNavigate();
+
   // Calculate metrics
   const metrics = useMemo(() => {
     const totalUsers = users.length;
     const lowBalanceUsers = users.filter(user => user.balance < 50).length;
-    const averageBalance = users.length > 0 
+    const averageBalance = users.length > 0
       ? users.reduce((sum, user) => sum + (user.balance || 0), 0) / users.length
       : 0;
     const totalBalance = users.reduce((sum, user) => sum + (user.balance || 0), 0);
-    
+
     return {
       totalUsers,
       lowBalanceUsers,
@@ -71,9 +74,9 @@ export default function AdminPage() {
   // Filter users based on search
   const filteredUsers = useMemo(() => {
     if (!searchTerm) return users;
-    
+
     const term = searchTerm.toLowerCase();
-    return users.filter(user => 
+    return users.filter(user =>
       user.name?.toLowerCase().includes(term) ||
       user.email?.toLowerCase().includes(term) ||
       user.contact?.toString().toLowerCase().includes(term) ||
@@ -122,8 +125,10 @@ export default function AdminPage() {
   };
 
   const handleViewDetails = (user) => {
-    toast.info(`Viewing details for ${user.name}`);
+    // toast.info(`Viewing details for ${user.name}`);
     // Implement view details functionality here
+    navigate(`/user-detail/${user.user_id}`)
+
   };
 
   const handleExport = () => {
@@ -157,8 +162,8 @@ export default function AdminPage() {
             <p className="text-gray-600 mt-2">Manage and monitor all user accounts</p>
           </div>
           <div className="flex items-center gap-3">
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               onClick={fetchUsers}
               disabled={isLoading}
               className="gap-2"
@@ -166,7 +171,7 @@ export default function AdminPage() {
               <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
               Refresh
             </Button>
-            <Button 
+            <Button
               onClick={handleExport}
               className="gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
             >
@@ -211,8 +216,8 @@ export default function AdminPage() {
               </CardDescription>
             </CardContent>
             <CardFooter className="pt-2">
-              <Progress 
-                value={(metrics.lowBalanceUsers / Math.max(metrics.totalUsers, 1)) * 100} 
+              <Progress
+                value={(metrics.lowBalanceUsers / Math.max(metrics.totalUsers, 1)) * 100}
                 className="h-2"
               />
             </CardFooter>
@@ -281,203 +286,184 @@ export default function AdminPage() {
 
         {/* Main Content */}
         {/* <div className="grid grid-cols-1 lg:grid-cols-3 gap-6"> */}
-          {/* Users Table */}
-          <Card className="shadow-lg">
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <div>
-                  <CardTitle className="text-xl">User Accounts</CardTitle>
-                  <CardDescription>
-                    Manage user information and balance
-                  </CardDescription>
-                </div>
-                <Badge variant="outline" className="text-sm">
-                  {isLoading ? 'Loading...' : `${users.length} users`}
-                </Badge>
+        {/* Users Table */}
+        <Card className="shadow-lg">
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="text-xl">User Accounts</CardTitle>
+                <CardDescription>
+                  Manage user information and balance
+                </CardDescription>
               </div>
-            </CardHeader>
-            <CardContent>
-              <div className="rounded-md border">
-                <Table>
-                  <TableHeader className="bg-gray-50">
+              <Badge variant="outline" className="text-sm">
+                {isLoading ? 'Loading...' : `${users.length} users`}
+              </Badge>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="rounded-md border">
+              <Table>
+                <TableHeader className="bg-gray-50">
+                  <TableRow>
+                    <TableHead className="font-semibold">User</TableHead>
+                    <TableHead className="font-semibold">Contact</TableHead>
+                    <TableHead className="font-semibold">Balance</TableHead>
+                    <TableHead className="font-semibold text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {isLoading ? (
                     <TableRow>
-                      <TableHead className="font-semibold">User</TableHead>
-                      <TableHead className="font-semibold">Contact</TableHead>
-                      <TableHead className="font-semibold">Balance</TableHead>
-                      <TableHead className="font-semibold text-right">Actions</TableHead>
+                      <TableCell colSpan={4} className="text-center py-8">
+                        <div className="flex flex-col items-center gap-2">
+                          <RefreshCw className="h-6 w-6 animate-spin text-gray-400" />
+                          <p className="text-gray-500">Loading users...</p>
+                        </div>
+                      </TableCell>
                     </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {isLoading ? (
-                      <TableRow>
-                        <TableCell colSpan={4} className="text-center py-8">
-                          <div className="flex flex-col items-center gap-2">
-                            <RefreshCw className="h-6 w-6 animate-spin text-gray-400" />
-                            <p className="text-gray-500">Loading users...</p>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ) : paginatedUsers.length === 0 ? (
-                      <TableRow>
-                        <TableCell colSpan={4} className="text-center py-8">
-                          <div className="flex flex-col items-center gap-2">
-                            <Users className="h-8 w-8 text-gray-400" />
-                            <p className="text-gray-500">No users found</p>
-                            {searchTerm && (
-                              <Button 
-                                variant="ghost" 
-                                onClick={() => setSearchTerm("")}
-                                className="text-sm"
-                              >
-                                Clear search
-                              </Button>
-                            )}
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ) : (
-                      paginatedUsers.map((user) => (
-                        <TableRow key={user.id} className="hover:bg-gray-50 transition-colors">
-                          <TableCell>
-                            <div className="flex items-center gap-3">
-                              <Avatar className="h-9 w-9 border">
-                                <AvatarImage src={user.avatar} />
-                                <AvatarFallback className="bg-gradient-to-br from-blue-100 to-blue-200 text-blue-700">
-                                  {getInitials(user.name || 'UU')}
-                                </AvatarFallback>
-                              </Avatar>
-                              <div>
-                                <div className="font-medium text-gray-900">{user.name || 'Unknown User'}</div>
-                                <div className="text-sm text-gray-500 flex items-center gap-1">
-                                  <Mail className="h-3 w-3" />
-                                  {user.email || 'No email'}
-                                </div>
+                  ) : paginatedUsers.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={4} className="text-center py-8">
+                        <div className="flex flex-col items-center gap-2">
+                          <Users className="h-8 w-8 text-gray-400" />
+                          <p className="text-gray-500">No users found</p>
+                          {searchTerm && (
+                            <Button
+                              variant="ghost"
+                              onClick={() => setSearchTerm("")}
+                              className="text-sm"
+                            >
+                              Clear search
+                            </Button>
+                          )}
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    paginatedUsers.map((user) => (
+                      <TableRow key={user.id} className="hover:bg-gray-50 transition-colors">
+                        <TableCell>
+                          <div className="flex items-center gap-3">
+                            <Avatar className="h-9 w-9 border">
+                              <AvatarImage src={user.avatar} />
+                              <AvatarFallback className="bg-gradient-to-br from-blue-100 to-blue-200 text-blue-700">
+                                {getInitials(user.name || 'UU')}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div>
+                              <div className="font-medium text-gray-900">{user.name || 'Unknown User'}</div>
+                              <div className="text-sm text-gray-500 flex items-center gap-1">
+                                <Mail className="h-3 w-3" />
+                                {user.email || 'No email'}
                               </div>
                             </div>
-                          </TableCell>
-                          <TableCell>
-                            <div className="text-sm text-gray-900">{user.contact || 'No contact'}</div>
-                            <div className="text-xs text-gray-500 flex items-center gap-1">
-                              <Phone className="h-3 w-3" />
-                              {user.phone || 'No phone'}
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            <div className={`font-semibold ${getBalanceColor(user.balance)}`}>
-                              ₹{user.balance?.toFixed(2) || '0.00'}
-                            </div>
-                            {user.balance < 50 && (
-                              <Badge variant="destructive" className="mt-1 text-xs">
-                                Low Balance
-                              </Badge>
-                            )}
-                          </TableCell>
-                          <TableCell>
-                            <div className="flex justify-end gap-2">
-                              {/* <Button
-                                size="sm"
-                                variant="outline"
-                                onClick={() => handleViewDetails(user)}
-                                className="gap-1"
-                              >
-                                <Eye className="h-3 w-3" />
-                                View
-                              </Button> */}
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                onClick={() => handleEdit(user.id)}
-                                className="gap-1 cursor-pointer"
-                              >
-                                <Edit className="h-3 w-3" />
-                                {/* Edit */}
-                              </Button>
-                              <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                  <Button size="sm" variant="ghost cursor-pointer">
-                                    <MoreVertical className="h-4 w-4" />
-                                  </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end">
-                                  <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                  <DropdownMenuSeparator />
-                                  <DropdownMenuItem>Detail</DropdownMenuItem>
-                                  <DropdownMenuItem>View History</DropdownMenuItem>
-                                  <DropdownMenuItem>Reset Password</DropdownMenuItem>
-                                  <DropdownMenuSeparator />
-                                  <DropdownMenuItem className="text-red-600">
-                                    Deactivate User
-                                  </DropdownMenuItem>
-                                </DropdownMenuContent>
-                              </DropdownMenu>
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      ))
-                    )}
-                  </TableBody>
-                </Table>
-              </div>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          {/* <div className="text-sm text-gray-900">{user.contact || 'No contact'}</div> */}
+                          <div className="text-sm text-gray-900 flex items-center gap-1">
+                            <Phone className="h-3 w-3" />
+                            {user.contact || 'No phone'}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className={`font-semibold ${getBalanceColor(user.balance)}`}>
+                            ₹{user.balance?.toFixed(2) || '0.00'}
+                          </div>
+                          {user.balance < 50 && (
+                            <Badge variant="destructive" className="mt-1 text-xs">
+                              Low Balance
+                            </Badge>
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex justify-end gap-2">
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button size="sm" variant="ghost cursor-pointer">
+                                  <MoreVertical className="h-4 w-4" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem onClick={() => handleViewDetails(user)}>Detail</DropdownMenuItem>
+                                <DropdownMenuItem>Wallet Topup</DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem className="text-red-600">
+                                  Deactivate User
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
+                </TableBody>
+              </Table>
+            </div>
 
-              {/* Pagination */}
-              {filteredUsers.length > 0 && (
-                <div className="flex items-center justify-between mt-4">
-                  <div className="text-sm text-gray-500">
-                    Showing {(currentPage - 1) * itemsPerPage + 1} to {Math.min(currentPage * itemsPerPage, filteredUsers.length)} of {filteredUsers.length} users
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                      disabled={currentPage === 1}
-                    >
-                      <ChevronLeft className="h-4 w-4" />
-                      Previous
-                    </Button>
-                    <div className="flex items-center gap-1">
-                      {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
-                        let pageNum;
-                        if (totalPages <= 5) {
-                          pageNum = i + 1;
-                        } else if (currentPage <= 3) {
-                          pageNum = i + 1;
-                        } else if (currentPage >= totalPages - 2) {
-                          pageNum = totalPages - 4 + i;
-                        } else {
-                          pageNum = currentPage - 2 + i;
-                        }
-                        
-                        return (
-                          <Button
-                            key={pageNum}
-                            variant={currentPage === pageNum ? "default" : "outline"}
-                            size="sm"
-                            onClick={() => setCurrentPage(pageNum)}
-                            className="w-8 h-8 p-0"
-                          >
-                            {pageNum}
-                          </Button>
-                        );
-                      })}
-                    </div>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                      disabled={currentPage === totalPages}
-                    >
-                      Next
-                      <ChevronRight className="h-4 w-4" />
-                    </Button>
-                  </div>
+            {/* Pagination */}
+            {filteredUsers.length > 0 && (
+              <div className="flex items-center justify-between mt-4">
+                <div className="text-sm text-gray-500">
+                  Showing {(currentPage - 1) * itemsPerPage + 1} to {Math.min(currentPage * itemsPerPage, filteredUsers.length)} of {filteredUsers.length} users
                 </div>
-              )}
-            </CardContent>
-          </Card>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                    disabled={currentPage === 1}
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                    Previous
+                  </Button>
+                  <div className="flex items-center gap-1">
+                    {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
+                      let pageNum;
+                      if (totalPages <= 5) {
+                        pageNum = i + 1;
+                      } else if (currentPage <= 3) {
+                        pageNum = i + 1;
+                      } else if (currentPage >= totalPages - 2) {
+                        pageNum = totalPages - 4 + i;
+                      } else {
+                        pageNum = currentPage - 2 + i;
+                      }
 
-          {/* Low Balance Users Card */}
-          {/* <Card className="shadow-lg">
+                      return (
+                        <Button
+                          key={pageNum}
+                          variant={currentPage === pageNum ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => setCurrentPage(pageNum)}
+                          className="w-8 h-8 p-0"
+                        >
+                          {pageNum}
+                        </Button>
+                      );
+                    })}
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                    disabled={currentPage === totalPages}
+                  >
+                    Next
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Low Balance Users Card */}
+        {/* <Card className="shadow-lg">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>

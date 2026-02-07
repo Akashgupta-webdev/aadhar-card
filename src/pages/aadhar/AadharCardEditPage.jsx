@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import AadharCardPage from "./AadharCardPage";
 import { supabase } from "../../lib/supabaseClient";
 import { useAuth } from "../../hooks/useAuth";
 import { uploadAadhaarImage } from "../../lib/uploadAadharImage";
 import { useNavigate, useParams } from "react-router-dom";
+import { UserContext } from "../../contexts/UserProvider";
 
 const fetchTranslate = async (lang, text) => {
   try {
@@ -23,7 +24,7 @@ const fetchTranslate = async (lang, text) => {
 
 export default function AadharCardEditPage() {
   const { id } = useParams();
-  const { user } = useAuth();
+  const { user } = useContext(UserContext);
   const [renderFormComponent, setRenderFormComponent] = useState(true);
   const [imageFile, setImageFile] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);

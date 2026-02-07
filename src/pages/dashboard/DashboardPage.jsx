@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { 
   Bell, 
   CreditCard, 
@@ -18,6 +18,7 @@ import {
   ArrowUpRight,
   ArrowDownRight
 } from 'lucide-react';
+import { UserContext } from '../../contexts/UserProvider';
 
 // Mock data for the dashboard
 const mockUserData = {
@@ -47,20 +48,21 @@ const mockUserData = {
 };
 
 const UserDashboard = () => {
+  const { user } = useContext(UserContext);
   const [userData, setUserData] = useState(mockUserData);
   const [activeTab, setActiveTab] = useState('overview');
 
   // Format currency
   const formatCurrency = (amount) => {
-    return new Intl.NumberFormat('en-US', {
+    return new Intl.NumberFormat('en-IN', {
       style: 'currency',
-      currency: 'USD'
+      currency: 'INR'
     }).format(amount);
   };
 
   // Format date
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
+    return new Date(dateString).toLocaleDateString('en-IN', {
       month: 'short',
       day: 'numeric'
     });
@@ -85,7 +87,7 @@ const UserDashboard = () => {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-            <p className="text-gray-500 text-sm">Welcome back, {userData.profile.name}</p>
+            <p className="text-gray-500 text-sm">Welcome back, {user?.name}</p>
           </div>
           <div className="flex items-center space-x-4">
             <button className="relative p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors">
@@ -93,7 +95,7 @@ const UserDashboard = () => {
               <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white"></span>
             </button>
             <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold text-sm">
-              {userData.profile.name.charAt(0)}
+              {user.name.charAt(0)}
             </div>
           </div>
         </div>
@@ -109,21 +111,21 @@ const UserDashboard = () => {
               <h3 className="text-blue-100 text-sm font-medium">Total Balance</h3>
               <CreditCard size={20} className="text-blue-200" />
             </div>
-            <p className="text-3xl font-bold mb-2">{formatCurrency(userData.balance.current)}</p>
+            <p className="text-3xl font-bold mb-2">{formatCurrency(user.balance)}</p>
             <div className="flex items-center space-x-4 text-sm">
               <div className="flex items-center">
                 <ArrowUpRight size={16} className="text-green-300 mr-1" />
-                <span className="text-green-300">+{formatCurrency(userData.balance.income)}</span>
+                <span className="text-green-300">+{formatCurrency(1000)}</span>
               </div>
               <div className="flex items-center">
                 <ArrowDownRight size={16} className="text-red-300 mr-1" />
-                <span className="text-red-300">{formatCurrency(userData.balance.expenses)}</span>
+                <span className="text-red-300">{formatCurrency(500)}</span>
               </div>
             </div>
           </div>
 
           {/* Quick Stats */}
-          {userData.quickStats.map((stat, index) => (
+          {/* {userData.quickStats.map((stat, index) => (
             <div key={index} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-gray-600 text-sm font-medium">{stat.title}</h3>
@@ -135,7 +137,7 @@ const UserDashboard = () => {
                 <span>{stat.change}</span>
               </div>
             </div>
-          ))}
+          ))} */}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -179,13 +181,13 @@ const UserDashboard = () => {
                 <div className="relative inline-block mb-4">
                   <img
                     src={userData.profile.avatar}
-                    alt={userData.profile.name}
+                    alt={user.name }
                     className="w-20 h-20 rounded-full mx-auto border-4 border-white shadow-lg"
                   />
                   <div className="absolute bottom-0 right-0 w-6 h-6 bg-green-500 rounded-full border-2 border-white"></div>
                 </div>
-                <h2 className="text-xl font-bold text-gray-900">{userData.profile.name}</h2>
-                <p className="text-gray-500 text-sm mb-2">{userData.profile.email}</p>
+                <h2 className="text-xl font-bold text-gray-900">{user.name}</h2>
+                <p className="text-gray-500 text-sm mb-2">{user.email}</p>
                 <p className="text-gray-400 text-xs">Member since {userData.profile.joinDate}</p>
               </div>
               

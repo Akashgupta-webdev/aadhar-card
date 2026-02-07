@@ -17,6 +17,10 @@ import ExpenseTracker from "../pages/tools-page/ExpenseTracker";
 import ToolsLinkPage from "../pages/tools-page/ToolsLinkPage";
 import GovernmentLinkPage from "../pages/government/GovernmentLinkPage";
 import AdminPage from "../pages/admin/AdminPage";
+import UserDetailPage from "../pages/admin/UserDetailPage";
+import BirthCertificate from "../pages/birthCertificate/BirthCertificate";
+import BirthCertificateFormPage from "../pages/birthCertificate/BirthCertificateForm";
+import BirthCertificatePage from "../pages/birthCertificate/BirthCertificatePage";
 
 export default function AppRoutes() {
   return (
@@ -35,6 +39,10 @@ export default function AppRoutes() {
             <Route path="/government-links" element={<GovernmentLinkPage />} />
             <Route path="/tools" element={<ToolsLinkPage />} />            
             <Route path="/admin" element={<AdminPage />} />
+            <Route path="/user-detail/:userId" element={<UserDetailPage />} />
+            <Route path="/birth-certificate" element={<BirthCertificatePage />} />
+            <Route path="/birth-certificate-detail/:id" element={<BirthCertificate />} />
+            <Route path="/birth-certificate-form" element={<BirthCertificateFormPage />} />
           </Route>
         </Route>
       </Routes>

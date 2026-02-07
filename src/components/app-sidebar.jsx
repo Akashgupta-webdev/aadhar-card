@@ -46,6 +46,11 @@ const items = [
     icon: Home,
   },
   {
+    title: "Birth Certificate",
+    url: "/birth-certificate",
+    icon: Home,
+  },
+  {
     title: "Ration Card Details",
     url: "#",
     icon: Inbox,

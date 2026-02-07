@@ -6,14 +6,10 @@ export function useAuth() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      setAuthUser(data?.session?.user ?? null);
-      setLoading(false);
-    });
-
     const { data: listener } = supabase.auth.onAuthStateChange(
       (_event, session) => {
         setAuthUser(session?.user ?? null);
+        setLoading(false);
       }
     );
 
@@ -22,5 +18,5 @@ export function useAuth() {
     };
   }, []);
 
-  return { authUser, loading };
+  return { authUser, loading, setLoading };
 }

@@ -7,10 +7,12 @@ import { UserContext } from "../contexts/UserProvider";
 
 export default function ProtectedRoute() {
   const { user, loading } = useContext(UserContext);
+  console.log("user.id:", user.id);
+  console.log("loading:", loading);
 
   if (loading) {
     return (
-      <div className="w-screen h-screen flex justify-center items-center gap-2.5">
+      <div className="w-full h-full flex justify-center items-center gap-2.5">
         <Loader size="lg" />
         <div className="flex items-center">
           <span className="text-xl font-semibold text-slate-800">
